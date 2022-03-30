@@ -24,7 +24,9 @@ import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.TextUtils;
-import androidx.annotation.WorkerThread;
+
+//import androidx.annotation.WorkerThread;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -146,7 +148,7 @@ public class DeviceName {
    * @param context the application context.
    * @return {@link DeviceInfo} for the current device.
    */
-  @WorkerThread
+
   public static DeviceInfo getDeviceInfo(Context context) {
     return getDeviceInfo(context.getApplicationContext(), Build.DEVICE, Build.MODEL);
   }
@@ -160,7 +162,7 @@ public class DeviceName {
    * @param codename the codename of the device
    * @return {@link DeviceInfo} for the current device.
    */
-  @WorkerThread
+
   public static DeviceInfo getDeviceInfo(Context context, String codename) {
     return getDeviceInfo(context, codename, null);
   }
@@ -175,7 +177,7 @@ public class DeviceName {
    * @param model the model of the device
    * @return {@link DeviceInfo} for the current device.
    */
-  @WorkerThread
+
   public static DeviceInfo getDeviceInfo(Context context, String codename, String model) {
     SharedPreferences prefs = context.getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE);
     String key = String.format("%s:%s", codename, model);
