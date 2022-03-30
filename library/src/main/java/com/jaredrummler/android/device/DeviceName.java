@@ -59,7 +59,6 @@ import org.json.JSONObject;
  * DeviceName.with(context).request(new DeviceName.Callback() {
  *
  *   &#64;Override public void onFinished(DeviceName.DeviceInfo info, Exception error) {
- *     String manufacturer = info.manufacturer;  // "Samsung"
  *     String name = info.marketName;            // "Galaxy S6 Edge"
  *     String model = info.model;                // "SM-G925I"
  *     String codename = info.codename;          // "zerolte"
@@ -193,7 +192,6 @@ public class DeviceName {
       DeviceInfo info = database.queryToDevice(codename, model);
       if (info != null) {
         JSONObject json = new JSONObject();
-        json.put("manufacturer", info.manufacturer);
         json.put("codename", info.codename);
         json.put("model", info.model);
         json.put("market_name", info.marketName);
@@ -208,10 +206,10 @@ public class DeviceName {
     }
 
     if (codename.equals(Build.DEVICE) && Build.MODEL.equals(model)) {
-      return new DeviceInfo(Build.MANUFACTURER, codename, codename, model); // current device
+      return new DeviceInfo(codename, codename, model); // current device
     }
 
-    return new DeviceInfo(null, null, codename, model); // unknown device
+    return new DeviceInfo(null, codename, model); // unknown device
   }
 
   /**
@@ -315,13 +313,7 @@ public class DeviceName {
         } catch (Exception e) {
           error = e;
         }
-        handler.post(new Runnable() {
-
-          @Override
-          public void run() {
-            callback.onFinished(deviceInfo, error);
-          }
-        });
+        handler.post(() -> callback.onFinished(deviceInfo, error));
       }
     }
   }
@@ -346,10 +338,6 @@ public class DeviceName {
    */
   public static final class DeviceInfo {
 
-    /** Retail branding */
-    @Deprecated
-    public final String manufacturer;
-
     /** Marketing name */
     public final String marketName;
 
@@ -360,21 +348,15 @@ public class DeviceName {
     public final String model;
 
     public DeviceInfo(String marketName, String codename, String model) {
-      this(null, marketName, codename, model);
-    }
-
-    public DeviceInfo(String manufacturer, String marketName, String codename, String model) {
-      this.manufacturer = manufacturer;
       this.marketName = marketName;
       this.codename = codename;
       this.model = model;
     }
 
     private DeviceInfo(JSONObject jsonObject) throws JSONException {
-      manufacturer = jsonObject.getString("manufacturer");
-      marketName = jsonObject.getString("market_name");
-      codename = jsonObject.getString("codename");
-      model = jsonObject.getString("model");
+      marketName = jsonObject.optString("market_name", "unknown");
+      codename = jsonObject.optString("codename", "unknown");
+      model = jsonObject.optString("model", "unknown");
     }
 
     /**
