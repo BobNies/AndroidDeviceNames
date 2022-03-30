@@ -2,9 +2,8 @@ apply plugin: 'com.android.application'
 
 android {
   compileSdkVersion buildConfig.compileSdk
-  buildToolsVersion buildConfig.buildTools
 
-  defaultConfig {
+    defaultConfig {
     applicationId "com.jaredrummler.android.devicenames"
     minSdkVersion buildConfig.minSdk
     targetSdkVersion buildConfig.targetSdk
